@@ -131,6 +131,9 @@ static char *looking_at(char *line, const char *kwd)
     char *p = line;
     const char *q = kwd;
 
+    if (!q)
+        return NULL;
+
     while (*p && *q && ((*p ^ *q) & ~0x20) == 0) {
 	p++;
 	q++;

@@ -6,6 +6,8 @@
 #define _SYS_TIMES_H
 
 #include <stdint.h>
+#include <time.h>
+#include <sys/time.h>
 
 struct tms {
     /* Empty */
@@ -14,14 +16,11 @@ struct tms {
 #define HZ		1000
 #define CLK_TCK		HZ
 
-typedef uint32_t clock_t;
-
-extern volatile uint32_t __ms_timer;
-
 static inline clock_t times(struct tms *buf)
 {
-    (void)buf;
-    return __ms_timer;
+	struct timeval tv;
+	gettimeofday(&tv, 0);
+	return (1000 * tv.tv_sec) + (tv.tv_usec / 1000);
 }
 
 #endif /* _SYS_TIMES_H */

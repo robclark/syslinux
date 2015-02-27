@@ -5,6 +5,9 @@
 #ifndef _DPRINTF_H
 #define _DPRINTF_H
 
+#define DEBUG_STDIO
+#define CORE_DEBUG 3
+
 #include <syslinux/debug.h>
 
 #if !defined(DEBUG_PORT) && !defined(DEBUG_STDIO)

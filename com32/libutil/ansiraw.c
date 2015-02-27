@@ -83,6 +83,30 @@ void console_ansi_raw(void)
     tcsetattr(0, TCSAFLUSH, &tio);
 }
 
+#if 1
+#include <time.h>
+#include <sys/time.h>
+static int throttle(int fd)
+{
+	struct timeval timeout;
+	fd_set read_fds, write_fds, except_fds;
+	int rv;
+
+	FD_ZERO(&read_fds);
+	FD_ZERO(&write_fds);
+	FD_ZERO(&except_fds);
+	FD_SET(fd, &read_fds);
+
+	/* set timeout to 0.1 seconds: */
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 100000;
+
+	return select(fd+1, &read_fds, &write_fds, &except_fds, &timeout);
+}
+#else
+static int throttle(int fd) { return 0; }
+#endif
+
 int raw_read(int fd, void *buf, size_t count)
 {
 	struct termios tio, rtio;
@@ -93,8 +117,13 @@ int raw_read(int fd, void *buf, size_t count)
 	cfmakeraw(&rtio);
 	tcsetattr(fd, 0, &rtio);
 
+	rv = throttle(fd);
+	if (rv <= 0)
+		goto out;
+
 	rv = read(fd, buf, count);
 
+out:
 	/* Restore settings */
 	tcsetattr(fd, 0, &tio);
 

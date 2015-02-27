@@ -1,7 +1,6 @@
 /* ----------------------------------------------------------------------- *
  *
- *   Copyright 2008 H. Peter Anvin - All Rights Reserved
- *   Copyright 2011 Intel Corporation; author: H. Peter Anvin
+ *   Copyright 2007-2008 H. Peter Anvin - All Rights Reserved
  *
  *   Permission is hereby granted, free of charge, to any person
  *   obtaining a copy of this software and associated documentation
@@ -26,24 +25,26 @@
  *
  * ----------------------------------------------------------------------- */
 
+#include <stddef.h>
+
 /*
- * syslinux/ipappend.c
+ * syslinux/advwrite.c
  *
- * Get ipappend strings
+ * Write back the ADV
  */
 
-#include <syslinux/sysappend.h>
-#include <syslinux/config.h>
-#include <syslinux/pmapi.h>
-#include <klibc/compiler.h>
-#include <core.h>
-
-struct syslinux_ipappend_strings __syslinux_ipappend_strings;
-
-const char *sysappend_strings[SYSAPPEND_MAX];
-
-void __constructor __syslinux_get_ipappend_strings(void)
+int syslinux_adv_write(void)
 {
-    __syslinux_ipappend_strings.count = SYSAPPEND_MAX,
-    __syslinux_ipappend_strings.ptr   = sysappend_strings;
+	return 0;
+}
+
+
+int syslinux_setadv(int tag, size_t size, const void *data)
+{
+	return 0;
+}
+
+const void *syslinux_getadv(int tag, size_t * size)
+{
+	return NULL;
 }
