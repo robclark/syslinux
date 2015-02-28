@@ -219,6 +219,7 @@ struct labeldata {
     enum kernel_type type;
     const char *append;
     const char *initrd;
+    const char *fdtdir;
     const char *menulabel;
     const char *passwd;
     char *helptext;
@@ -243,6 +244,7 @@ static void clear_label_data(struct labeldata *ld)
     refstr_put(ld->kernel);
     refstr_put(ld->append);
     refstr_put(ld->initrd);
+    refstr_put(ld->fdtdir);
     refstr_put(ld->menulabel);
     refstr_put(ld->passwd);
 
@@ -374,6 +376,9 @@ static void record(struct menu *m, struct labeldata *ld, const char *append)
 
 	    if (ld->initrd)
 		ipp += sprintf(ipp, " initrd=%s", ld->initrd);
+
+	    if (ld->fdtdir)
+		ipp += sprintf(ipp, " fdtdir=%s", ld->fdtdir);
 
 	    if (ld->ipappend) {
 		ipappend = syslinux_ipappend_strings();
@@ -1013,6 +1018,14 @@ do_include:
 	    if (ld.label) {
 		refstr_put(ld.initrd);
 		ld.initrd = a;
+	    } else {
+		/* Ignore */
+	    }
+	} else if (looking_at(p, "fdtdir")) {
+	    const char *a = refstrdup(skipspace(p + 6));
+	    if (ld.label) {
+		refstr_put(ld.fdtdir);
+		ld.fdtdir = a;
 	    } else {
 		/* Ignore */
 	    }
