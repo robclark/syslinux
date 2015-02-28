@@ -136,12 +136,51 @@ static void ansicon_set_cursor(int x, int y, bool visible)
 {
 }
 
+#define ENTRY(code, val) [(code) - 0x80] = (val)
+#if 0
+static const const char *extended_utf8[0x80] = {
+	ENTRY(179, "\342\224\202"),
+	ENTRY(191, "\342\224\220"),
+	ENTRY(192, "\342\224\224"),
+	ENTRY(193, "\342\224\264"),
+	ENTRY(194, "\342\224\254"),
+	ENTRY(195, "\342\224\234"),
+	ENTRY(196, "\342\224\200"),
+	ENTRY(197, "\342\224\274"),
+	ENTRY(217, "\342\224\230"),
+	ENTRY(218, "\342\224\214"),
+};
+#endif
+
+/* fbcon kinda sucks, so just translate special box chars into
+ * closest ascii equiv's.. if we had kmscon we could do something
+ * more clever with unicode chars instead.. :-/
+ */
+static const char *extended[0x80] = {
+	ENTRY(179, "|"),
+	ENTRY(180, "+"),
+	ENTRY(191, "+"),
+	ENTRY(192, "+"),
+	ENTRY(195, "+"),
+	ENTRY(196, "-"),
+	ENTRY(217, "+"),
+	ENTRY(218, "+"),
+};
+
 static void ansicon_write_char(int x, int y, uint8_t ch,
 	const struct term_state *st)
 {
     fprintf(logfd, "WRITE: {%d,%d: %c (%u)}\n", x, y, ch, ch);
     set_state(st, x, y);
-    fprintf(stdout, "%c", ch);
+    if (ch >= 0x80) {
+	int idx = ch - 0x80;
+	if (extended[idx])
+	    fprintf(stdout, "%s", extended[idx]);
+	else
+	    fprintf(stdout, "?");
+    } else {
+	fprintf(stdout, "%c", ch);
+    }
 }
 
 static void ansicon_scroll_up(const struct term_state *st)
