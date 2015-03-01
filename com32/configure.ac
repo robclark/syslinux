@@ -34,10 +34,6 @@ AM_MAINTAINER_MODE
 # Enable quiet compiles on automake 1.11.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-# redirect output through custom ansi stuff:
-CFLAGS="$CFLAGS -Dprintf=console_printf -Dputchar=console_putchar -Dfputs=console_fputs"
-AC_SUBST(CFLAGS)
-
 # Initialize libtool
 AC_PROG_LIBTOOL
 

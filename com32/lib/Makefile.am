@@ -27,6 +27,7 @@ liblib_LIBRARIES  = liblib.a
 liblibdir         = $(libdir)
 liblib_a_CFLAGS   = \
 	-O0 -g \
+	-include $(top_srcdir)/override.h \
 	$(WARN_CFLAGS) \
 	-I$(top_srcdir)/include
 liblib_a_LDFLAGS  = -static

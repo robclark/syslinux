@@ -27,6 +27,7 @@ libmenu_LIBRARIES  = libmenu.a
 libmenudir         = $(libdir)
 libmenu_a_CFLAGS   = \
 	-O0 -g \
+	-include $(top_srcdir)/override.h \
 	$(WARN_CFLAGS) \
 	-I$(top_srcdir)/libutil/include \
 	-I$(top_srcdir)/include
